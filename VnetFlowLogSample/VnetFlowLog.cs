@@ -8,6 +8,17 @@ public class VnetFlowLog
 {
     [JsonPropertyName("records")]
     public List<FlowLogRecord> Records { get; set; } = new();
+
+    public IEnumerable<FlowTuple> GetFlowTuples()
+    {
+        return Records
+            .Select(r => r.FlowRecords)
+            .SelectMany(fr => fr.Flows)
+            .SelectMany(f => f.FlowGroups)
+            .SelectMany(fg => fg.FlowTuples)
+            .Select(t => FlowTuple.TryCreate(t, out var flowTuple) ? flowTuple : null)
+            .Where(flowTuple => flowTuple != null)!;
+    }
 }
 
 public class FlowLogRecord

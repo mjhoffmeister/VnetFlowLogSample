@@ -378,4 +378,24 @@ public class VnetFlowLogTests
         // Assert
         Assert.False(result);
     }
+
+    [Fact]
+    public void GetFlowTuples_HasFlowTuples_ReturnsAllValidFlowTuples()
+    {
+        // Arrange
+        var vnetFlowLog = DeserializeVnetFlowLog();
+
+        // Expected count calculation:
+        // From the sample JSON:
+        // - First flow has 1 flow group with 2 flow tuples
+        // - Second flow has 2 flow groups with 1 and 2 flow tuples respectively
+        // Total expected: 2 + 1 + 2 = 5 flow tuples
+        int expectedTupleCount = 5;
+
+        // Act
+        var flowTuples = vnetFlowLog.GetFlowTuples().ToList();
+
+        // Assert
+        Assert.Equal(expectedTupleCount, flowTuples.Count);
+    }
 }
